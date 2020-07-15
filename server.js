@@ -10,8 +10,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Set static folder
+
+// Serve static assets
 app.use(express.static(path.join(__dirname, 'public')))
+
 
 const botName = 'Admin'
 
@@ -30,7 +32,7 @@ io.on('connection', socket => {
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} has joined the chat`));
 
         // Send users and room info
-        io.to(user.room).emit('roomUsers',{
+        io.to(user.room).emit('roomUsers', {
             room: user.room,
             users: getRoomUsers(user.room)
         })
@@ -52,11 +54,11 @@ io.on('connection', socket => {
             io.to(user.room).emit('message', formatMessage(botName, `${user.username} has left the chat`))
         }
 
-                // Send users and room info
-                io.to(user.room).emit('roomUsers',{
-                    room: user.room,
-                    users: getRoomUsers(user.room)
-                })
+        // Send users and room info
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUsers(user.room)
+        })
 
     });
 });
